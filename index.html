@@ -45,67 +45,120 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="r_ai_2025--helper-utilities-for-patient-level-etl">R_AI_2025 — helper utilities for patient-level ETL<a class="anchor" aria-label="anchor" href="#r_ai_2025--helper-utilities-for-patient-level-etl"></a>
+<div class="page-header"><h1 id="utilities-for-pivoting-long-data-to-wide-format-using-datatables-dcast">Utilities for Pivoting Long Data to Wide Format Using data.table’s dcast<a class="anchor" aria-label="anchor" href="#utilities-for-pivoting-long-data-to-wide-format-using-datatables-dcast"></a>
 </h1></div>
-<p>This repository is associated with Jonathan Pearce’s R+AI 2025 Conference Presentation.</p>
-<p>High-level summary - Small R utilities (data.table + dplyr) for patient-level ETL: filtering events by date windows, pivoting event-level data to wide patient-level flag/count/value tables, imputing missing patients/values, and normalizing variable names. - Includes a minimal test for the isLengthNonZero helper (tests/testthat/test-isLengthNonZero.R).</p>
-<p>Repository contents (key files) - helper_functions.R — main helper functions used for pivoting and naming. - tests/testthat/test-isLengthNonZero.R — unit tests for the isLengthNonZero function. - README.md — this file.</p>
-<p>Function summaries (in helper_functions.R) - subsetEvents(dt, event_date_var, start_date_var, end_date_var) - Filter a data.table of events to rows where event_date_var is between start_date_var and end_date_var (inclusive).</p>
+<p>Associated with Jonathan Pearce’s R+AI 2025 Conference Presentation.</p>
+<div class="section level2">
+<h2 id="high-level-summary">High-level summary<a class="anchor" aria-label="anchor" href="#high-level-summary"></a>
+</h2>
 <ul>
-<li>getDataTimePeriod(dt, dt_date_var, time_period)
+<li>Small R utilities (data.table + dplyr) for patient-level ETL:
 <ul>
-<li>Wrapper around subsetEvents that uses a two-element time_period object (start, end) to subset dt.</li>
+<li>Filter events by date windows</li>
+<li>Pivot event-level (long) data to wide patient-level flag, count, and value tables using data.table::dcast</li>
+<li>Impute missing patients/values</li>
+<li>Normalize variable names</li>
 </ul>
 </li>
-<li>isLengthNonZero(x)
+<li>Includes a unit test for the isLengthNonZero helper (tests/testthat/test-isLengthNonZero.R)</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="repository-contents">Repository contents<a class="anchor" aria-label="anchor" href="#repository-contents"></a>
+</h2>
 <ul>
-<li>Aggregator that returns 1 if length(x) &gt; 0, otherwise 0. Intended for use as fun.aggregate in dcast to create binary flags.</li>
+<li>R/ — R source files (helper functions)
+<ul>
+<li>R/helper_functions.R</li>
 </ul>
 </li>
-<li>getFlags(dt, dt_flag_var, data_type, time_period)
+<li>tests/
 <ul>
-<li>Pivot dt to a wide patient-level flag table (ptid ~ dt_flag_var) using isLengthNonZero; then formats column names with data_type/time_period/value-type.</li>
+<li>tests/testthat/test-isLengthNonZero.R</li>
+<li>tests/testthat.R</li>
 </ul>
 </li>
-<li>getCounts(dt, dt_count_var, data_type, time_period, fill_value = NA)
+<li>DESCRIPTION — package metadata</li>
+<li>NAMESPACE</li>
+<li>README.md — this file</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="functions-short-summaries">Functions (short summaries)<a class="anchor" aria-label="anchor" href="#functions-short-summaries"></a>
+</h2>
+<div class="section level3">
+<h3 id="subseteventsdt-event_date_var-start_date_var-end_date_var">subsetEvents(dt, event_date_var, start_date_var, end_date_var)<a class="anchor" aria-label="anchor" href="#subseteventsdt-event_date_var-start_date_var-end_date_var"></a>
+</h3>
+<p>Filter a data.table to rows where event_date_var is between start_date_var and end_date_var (inclusive).</p>
+</div>
+<div class="section level3">
+<h3 id="getdatatimeperioddt-dt_date_var-time_period">getDataTimePeriod(dt, dt_date_var, time_period)<a class="anchor" aria-label="anchor" href="#getdatatimeperioddt-dt_date_var-time_period"></a>
+</h3>
+<p>Wrapper around subsetEvents that uses a two-element time_period (start, end) to subset dt.</p>
+</div>
+<div class="section level3">
+<h3 id="islengthnonzerox">isLengthNonZero(x)<a class="anchor" aria-label="anchor" href="#islengthnonzerox"></a>
+</h3>
+<p>Return 1 if length(x) &gt; 0, otherwise 0. Intended as fun.aggregate in dcast to create binary flags.</p>
+</div>
+<div class="section level3">
+<h3 id="getflagsdt-dt_flag_var-data_type-time_period">getFlags(dt, dt_flag_var, data_type, time_period)<a class="anchor" aria-label="anchor" href="#getflagsdt-dt_flag_var-data_type-time_period"></a>
+</h3>
+<p>Pivot dt to a patient-level flag table (ptid ~ dt_flag_var) using isLengthNonZero; format column names.</p>
+</div>
+<div class="section level3">
+<h3 id="getcountsdt-dt_count_var-data_type-time_period-fill_value--na">getCounts(dt, dt_count_var, data_type, time_period, fill_value = NA)<a class="anchor" aria-label="anchor" href="#getcountsdt-dt_count_var-data_type-time_period-fill_value--na"></a>
+</h3>
+<p>Pivot dt to a patient-level counts table (ptid ~ dt_count_var) using length as aggregator; format names.</p>
+</div>
+<div class="section level3">
+<h3 id="getvaluesdt-dt_value_var-dt_name_var-data_type-time_period-date_description--na-fun_value--mean-fill_value--na">getValues(dt, dt_value_var, dt_name_var, data_type, time_period, date_description = NA, FUN_value = “mean”, fill_value = NA)<a class="anchor" aria-label="anchor" href="#getvaluesdt-dt_value_var-dt_name_var-data_type-time_period-date_description--na-fun_value--mean-fill_value--na"></a>
+</h3>
+<p>Pivot dt to a patient-level aggregated-values table (ptid ~ dt_name_var) applying FUN_value (e.g., mean) to dt_value_var; optional date_description modifies value label; format names.</p>
+</div>
+<div class="section level3">
+<h3 id="imputemissingpatientsdt-dt_sample-var_to_impute-impute_value">ImputeMissingPatients(dt, dt_sample, var_to_impute, impute_value)<a class="anchor" aria-label="anchor" href="#imputemissingpatientsdt-dt_sample-var_to_impute-impute_value"></a>
+</h3>
+<p>Ensure all patient IDs from dt_sample are present and replace NA in specified columns with impute_value.</p>
+</div>
+<div class="section level3">
+<h3 id="addprefixdt-prefix">addPrefix(dt, prefix)<a class="anchor" aria-label="anchor" href="#addprefixdt-prefix"></a>
+</h3>
+<p>Prepend prefix_ to all column names except the first (commonly ptid).</p>
+</div>
+<div class="section level3">
+<h3 id="addsuffixdt-suffix">addSuffix(dt, suffix)<a class="anchor" aria-label="anchor" href="#addsuffixdt-suffix"></a>
+</h3>
+<p>Append _suffix to all column names except the first.</p>
+</div>
+<div class="section level3">
+<h3 id="formatvariablenamesdt-data_type-time_period-value_type">formatVariableNames(dt, data_type, time_period, value_type)<a class="anchor" aria-label="anchor" href="#formatvariablenamesdt-data_type-time_period-value_type"></a>
+</h3>
+<p>Apply addPrefix and addSuffix sequence to produce consistent variable names.</p>
+</div>
+<div class="section level3">
+<h3 id="cleanvarnamesdt">cleanVarNames(dt)<a class="anchor" aria-label="anchor" href="#cleanvarnamesdt"></a>
+</h3>
+<p>Normalize column names: replace spaces, slashes, dots, and dashes with underscores and remove parentheses.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="video-recording-placeholder">Video recording (placeholder)<a class="anchor" aria-label="anchor" href="#video-recording-placeholder"></a>
+</h2>
 <ul>
-<li>Pivot dt to a wide patient-level counts table (ptid ~ dt_count_var) using length as aggregator; then formats names.</li>
-</ul>
-</li>
-<li>getValues(dt, dt_value_var, dt_name_var, data_type, time_period, date_description = NA, FUN_value = “mean”, fill_value = NA)
-<ul>
-<li>Pivot dt to a wide patient-level aggregated-values table (ptid ~ dt_name_var) applying FUN_value (e.g., mean) to dt_value_var; optional date_description is prepended to the value-type name; then formats names.</li>
-</ul>
-</li>
-<li>ImputeMissingPatients(dt, dt_sample, var_to_impute, impute_value)
-<ul>
-<li>Ensures all ptid from dt_sample are present by left-joining and replaces NA in specified columns with impute_value.</li>
-</ul>
-</li>
-<li>addPrefix(dt, prefix)
-<ul>
-<li>Prepend prefix_ to all column names except the first (assumed ptid).</li>
-</ul>
-</li>
-<li>addSuffix(dt, suffix)
-<ul>
-<li>Append _suffix to all column names except the first.</li>
-</ul>
-</li>
-<li>formatVariableNames(dt, data_type, time_period, value_type)
-<ul>
-<li>Convenience: addPrefix(data_type) then addSuffix(time_period without “time_period_”) then addSuffix(value_type).</li>
-</ul>
-</li>
-<li>cleanVarNames(dt)
-<ul>
-<li>Normalize column names: replace spaces, “/”, “.”, “-” with underscores and remove parentheses.</li>
-</ul>
+<li>Presentation video will be added after the conference.</li>
+<li>Placeholder link: <a href="#">Presentation video — coming soon</a>
 </li>
 </ul>
-<p>Video recording (placeholder) - A recording of Jonathan Pearce’s R+AI 2025 presentation will be added here after the conference. - Placeholder link: <a href="#">Presentation video — coming soon</a> - When available, replace the placeholder URL with the hosted video URL.</p>
-<p>Running tests - From the project root: - Using testthat: Rscript -e “testthat::test_dir(‘tests/testthat’)” - Or with devtools (if available): R -e “devtools::test()”</p>
-<p>Notes - Functions assume a column named <code>ptid</code> for patient identifier and rely on data.table semantics. Validate inputs (types and presence of columns) before use in production pipelines. ```// filepath: /workspaces/R_AI_2025/README.md</p>
+</div>
+<div class="section level2">
+<h2 id="running-tests">Running tests<a class="anchor" aria-label="anchor" href="#running-tests"></a>
+</h2>
+<p>From project root:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">"testthat::test_dir('tests/testthat')"</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co"># or, if using devtools:</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="ex">R</span> <span class="at">-e</span> <span class="st">"devtools::test()"</span></span></code></pre></div>
+</div>
 </div>
   </main><aside class="col-md-3"><div class="license">
 <h2 data-toc-skip>License</h2>
@@ -142,7 +195,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

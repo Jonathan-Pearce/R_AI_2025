@@ -1,0 +1,96 @@
+# Utilities for Pivoting Long Data to Wide Format Using data.table’s dcast
+
+Associated with Jonathan Pearce’s R+AI 2025 Conference Presentation.
+
+## High-level summary
+
+- Small R utilities (data.table + dplyr) for patient-level ETL:
+  - Filter events by date windows
+  - Pivot event-level (long) data to wide patient-level flag, count, and
+    value tables using data.table::dcast
+  - Impute missing patients/values
+  - Normalize variable names
+- Includes a unit test for the isLengthNonZero helper
+  (tests/testthat/test-isLengthNonZero.R)
+
+## Repository contents
+
+- R/ — R source files (helper functions)
+  - R/helper_functions.R
+- tests/
+  - tests/testthat/test-isLengthNonZero.R
+  - tests/testthat.R
+- DESCRIPTION — package metadata
+- NAMESPACE
+- README.md — this file
+
+## Functions (short summaries)
+
+### subsetEvents(dt, event_date_var, start_date_var, end_date_var)
+
+Filter a data.table to rows where event_date_var is between
+start_date_var and end_date_var (inclusive).
+
+### getDataTimePeriod(dt, dt_date_var, time_period)
+
+Wrapper around subsetEvents that uses a two-element time_period (start,
+end) to subset dt.
+
+### isLengthNonZero(x)
+
+Return 1 if length(x) \> 0, otherwise 0. Intended as fun.aggregate in
+dcast to create binary flags.
+
+### getFlags(dt, dt_flag_var, data_type, time_period)
+
+Pivot dt to a patient-level flag table (ptid ~ dt_flag_var) using
+isLengthNonZero; format column names.
+
+### getCounts(dt, dt_count_var, data_type, time_period, fill_value = NA)
+
+Pivot dt to a patient-level counts table (ptid ~ dt_count_var) using
+length as aggregator; format names.
+
+### getValues(dt, dt_value_var, dt_name_var, data_type, time_period, date_description = NA, FUN_value = “mean”, fill_value = NA)
+
+Pivot dt to a patient-level aggregated-values table (ptid ~ dt_name_var)
+applying FUN_value (e.g., mean) to dt_value_var; optional
+date_description modifies value label; format names.
+
+### ImputeMissingPatients(dt, dt_sample, var_to_impute, impute_value)
+
+Ensure all patient IDs from dt_sample are present and replace NA in
+specified columns with impute_value.
+
+### addPrefix(dt, prefix)
+
+Prepend prefix\_ to all column names except the first (commonly ptid).
+
+### addSuffix(dt, suffix)
+
+Append \_suffix to all column names except the first.
+
+### formatVariableNames(dt, data_type, time_period, value_type)
+
+Apply addPrefix and addSuffix sequence to produce consistent variable
+names.
+
+### cleanVarNames(dt)
+
+Normalize column names: replace spaces, slashes, dots, and dashes with
+underscores and remove parentheses.
+
+## Video recording (placeholder)
+
+- Presentation video will be added after the conference.
+- Placeholder link: [Presentation video — coming soon](#)
+
+## Running tests
+
+From project root:
+
+``` bash
+Rscript -e "testthat::test_dir('tests/testthat')"
+# or, if using devtools:
+R -e "devtools::test()"
+```
