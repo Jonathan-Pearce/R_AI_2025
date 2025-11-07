@@ -7,3 +7,7 @@
 *.tar.gz
 .DS_Store
 .vscode/
+R_AI_2025.Rcheck/
+R_AI_2025*.tar.gz
+R_AI_2025*.tgz
+docs

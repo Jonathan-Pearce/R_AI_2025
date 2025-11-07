@@ -12,4 +12,5 @@ Imports:
     dplyr
 Suggests:
     testthat
-RoxygenNote: 7.2.2
+RoxygenNote: 7.3.3
+URL: https://jonathan-pearce.github.io/R_AI_2025/
