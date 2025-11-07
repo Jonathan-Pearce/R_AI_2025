@@ -2,7 +2,7 @@ Package: R_AI_2025
 Type: Package
 Title: Utilities for pivoting long data to wide format using data.table’s dcast function
 Version: 0.1.0
-Authors@R: person(given = "Jonathan", family = "Pearce", role = c("aut", "cre"))
+Authors@R: person("Jonathan", "Pearce", email = "maintainer@example.com", role = c("aut", "cre"))
 Description: Small utilities to support patient-level ETL workflows: filtering events by date windows, pivoting event-level data to wide patient-level flag/count/value tables, imputing missing patients/values, and normalizing variable names. Associated with Jonathan Pearce's R+AI 2025 Conference Presentation.
 License: MIT + file LICENSE
 Encoding: UTF-8
