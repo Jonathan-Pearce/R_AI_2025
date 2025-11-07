@@ -1,7 +1,5 @@
 # Utilities for Pivoting Long Data to Wide Format Using data.table's dcast
 
-<img src="./images/Gemini_Generated_Image_th7333th7333th73.png" alt="drawing" width="200"/>
-
 Associated with Jonathan Pearce’s R+AI 2025 Conference Presentation.
 
 ## High-level summary
