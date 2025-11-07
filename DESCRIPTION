@@ -1,4 +1,4 @@
-Package: R_AI_2025
+Package: RAI2025
 Type: Package
 Title: Utilities for pivoting long data to wide format using data.table’s dcast function
 Version: 0.1.0
